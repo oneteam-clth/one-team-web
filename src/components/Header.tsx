@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, ShoppingCart, Heart, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, Heart, Menu, X, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { categories, collections } from "@/data/products";
 
@@ -11,6 +12,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { itemCount } = useCart();
   const { itemCount: wishlistCount } = useWishlist();
+  const { user, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
@@ -50,9 +52,17 @@ const Header = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="hidden md:flex">
-            <Search className="h-5 w-5" />
-          </Button>
+          {user ? (
+            <Button variant="ghost" size="icon" onClick={signOut} title="Cerrar sesión">
+              <LogOut className="h-5 w-5" />
+            </Button>
+          ) : (
+            <Link to="/auth">
+              <Button variant="ghost" size="icon" title="Iniciar sesión">
+                <User className="h-5 w-5" />
+              </Button>
+            </Link>
+          )}
           
           <Link to="/wishlist">
             <Button variant="ghost" size="icon" className="relative">
